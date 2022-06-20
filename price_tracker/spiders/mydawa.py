@@ -30,7 +30,7 @@ class BabyProducts(scrapy.Spider):
     current_brand = None
     custom_settings = {
         # "LOG_FILE": "logs/carrefour.log",
-        "LOG_LEVEL": "DEBUG",
+        # "LOG_LEVEL": "DEBUG",
         "FEED_FORMAT": "json",
         "FEED_URI": "./dataset/mydawa.json",
     }

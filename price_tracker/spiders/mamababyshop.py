@@ -18,7 +18,7 @@ class MamaBabyShop(scrapy.Spider):
     count = 1
     custom_settings = {
         # "LOG_FILE": "logs/carrefour.log",
-        "LOG_LEVEL": "DEBUG",
+        # "LOG_LEVEL": "DEBUG",
         "FEED_FORMAT": "json",
         "FEED_URI": "./dataset/mamababyshop.json",
     }

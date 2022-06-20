@@ -13,14 +13,14 @@ from scrapy.utils.project import get_project_settings
 
 
 class JumiaGroceries(scrapy.Spider):
-    name = "jumia_groceries"
+    name = "jumia"
     download_delay = 2
     start_urls = ["https://www.jumia.co.ke"]
     count = 1
     allowed_domains = ["jumia.co.ke"]
     custom_settings = {
-        # "LOG_FILE": "logs/carrefour.log",
-        "LOG_LEVEL": "DEBUG",
+        # "LOG_FILE": "logs/jumia.log",
+        # "LOG_LEVEL": "DEBUG",
         "FEED_FORMAT": "json",
         "FEED_URI": "./dataset/jumia.json",
     }

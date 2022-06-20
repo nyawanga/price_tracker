@@ -33,7 +33,7 @@ class BabyProducts(scrapy.Spider):
     execution_dir = Path(os.path.abspath(__file__)).parents[0]
     custom_settings = {
         # "LOG_FILE": "logs/carrefour.log",
-        "LOG_LEVEL": "DEBUG",
+        # "LOG_LEVEL": "DEBUG",
         "FEED_FORMAT": "json",
         "FEED_URI": "./dataset/carrefour.json",
     }
