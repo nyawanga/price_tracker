@@ -5,6 +5,7 @@ A scrapping bot to check price changing with Kenya heading to a general election
 
 HOW TO:
 
+- Install packages using `pip install --no-cache-dir -r requirements.txt`
 - To run the script you only need navigate to the root of the repo and run using:
   - `python run.py`  to run all existing working crawlers
   - `python run.py --crawlers jumia --crawlers carrefour` to run only these two crawlers
