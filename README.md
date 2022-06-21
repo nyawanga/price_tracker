@@ -15,6 +15,6 @@ HOW TO:
 - Dockerize the app
 - Add cloud storage pipeline
 - Add database pipeline
-- Add staging pipeline
+- Add reporting pipeline
 - Add data marting solution
 - Add analysis solution.
