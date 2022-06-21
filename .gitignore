@@ -144,4 +144,9 @@ Dockerfile.airflow
 docker-compose-local-airflow.yml
 script/*
 datasets/*
+dataset/*
 **/*.env
+tests.*
+**/*.ipynb
+processing/pyspark_helpers.py
+test.*

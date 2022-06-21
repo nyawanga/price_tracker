@@ -1,0 +1,42 @@
+ROOT_DIR: "/home/cube/development/projects/price_tracker"
+BASE_DIR: "dataset/base"
+STAGING_DIR: "dataset/staging"
+sources: [jumia, carrefour, mamababyshop]
+
+jumia:
+  schema:
+    datetime: [created_at]
+    integer: [prev_price, price, voters]
+    float: [discount, ratine]
+    string: [brand, category, item_url, name, sku]
+
+carrefour:
+  schema:
+    datetime: [created_at]
+    integer: [price, no_of_stock]
+    string:
+      [
+        brand,
+        source_id,
+        category,
+        category_hierarchy,
+        item_url,
+        name,
+        stock_status,
+        item_type,
+        item_size,
+      ]
+
+mydawa:
+  schema:
+    datetime: [created_at]
+    integer: [prev_price, price, voters]
+    float: [discount, ratine]
+    string: [brand, category, item_url, name, sku]
+
+mamababyshop:
+  schema:
+    datetime: [created_at]
+    integer: [price, voters]
+    float: [discount, rating]
+    string: [category, item_url, name, stock_status]

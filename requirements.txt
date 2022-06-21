@@ -6,3 +6,6 @@ html5lib==1.1
 PyMySQL==1.0.2
 psycopg2-binary==2.9.3
 SQLAlchemy==1.4.22
+dateutil
+boto3
+black
