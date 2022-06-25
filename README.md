@@ -10,6 +10,15 @@ HOW TO:
   - `python run.py`  to run all existing working crawlers
   - `python run.py --crawlers jumia --crawlers carrefour` to run only these two crawlers
 
+## Buld docker image
+
+- For the scraper use these commands:
+  - using only dokcer file `docker build -t price_tracker . -f Dockerfile.scraper`
+  - using docker compose `docker build -t price_tracker . -f Dockerfile.scraper`
+  
+- To run the scrapper from docker run it with the commands:
+  - `docker run --rm -v datasets:/datasets price_tracker /bin/bash -c "python run.py"`
+
 ## TO DO
 
 - Dockerize the app

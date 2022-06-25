@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: price_tracker
+    schema: public
+    database: price_tracker
+    # quoting:
+    # database: true
+    tables:
+      - name: jumia
+      # - name: attributes
+      # - name: additional_sources
+
+  # - name: dwh_meta_staging
+  #   tables:
+  #     - name: dim_immoscout_listing_attributes

@@ -1,3 +1,4 @@
+from email import header
 import time
 from bs4 import BeautifulSoup as bs
 import datetime
@@ -25,37 +26,46 @@ import scrapy
 
 class BabyProducts(scrapy.Spider):
     # handle_httpstatus_list = [403, 404]
-    name = "carrefour_babyproducts"
+    name = "carrefour"
     download_delay = 2
     allowed_domains = ["carrefour.ke"]
     base_url = "https://www.carrefour.ke"
     start_urls = ["https://www.carrefour.ke/mafken/en/c/FKEN1000000"]
     execution_dir = Path(os.path.abspath(__file__)).parents[0]
+    scrapping_date = datetime.datetime.strftime(
+        datetime.datetime.now().date(), "%Y%m%d"
+    )
     custom_settings = {
         # "LOG_FILE": "logs/carrefour.log",
-        # "LOG_LEVEL": "DEBUG",
+        "LOG_LEVEL": "INFO",
         "FEED_FORMAT": "json",
-        "FEED_URI": "./dataset/carrefour.json",
+        "FEED_URI": f"./datasets/base/{name}/{scrapping_date}-%(batch_id)03d.json",
+        "FEED_EXPORT_BATCH_ITEM_COUNT": 1000,
+        # "FEED_URI_PARAMS": "myproject.utils.uri_params",
     }
+
     headers = {
         "Host": "www.carrefour.ke",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
         "Accept": "*/*",
         "Accept-Language": "en-US,en;q=0.5",
         "Accept-Encoding": "gzip, deflate, br",
         "env": "prod",
         "appId": "Reactweb",
+        "userid": "undefined",
+        "token": "undefined",
+        "deviceId": "904460405.1655922412",
         "credentials": "include",
         "storeId": "mafken",
         "Sec-Fetch-Dest": "empty",
         "Sec-Fetch-Mode": "cors",
         "Sec-Fetch-Site": "same-origin",
-        "Referer": "https://www.carrefour.ke/mafken/en/c/FKEN1000000",
+        "Referer": "https://www.carrefour.ke/mafken/en/c/FKEN1700000",
         "Connection": "keep-alive",
     }
 
     def parse(self, reponse):
-        url = "https://www.carrefour.ke/api/v7/categories/FKEN1000000?filter=&sortBy=relevance&currentPage=1&pageSize=60&areaCode=Westlands%20-%20Nairobi&lang=en&displayCurr=KES&latitude=-1.2672236834605626&longitude=36.810586556760555"
+        url = "https://www.carrefour.ke/api/v7/categories/FKEN1700000?filter=&sortBy=relevance&currentPage=1&pageSize=60&maxPrice=&minPrice=&areaCode=Westlands%20-%20Nairobi&lang=en&displayCurr=KES&latitude=-1.2672236834605626&longitude=36.810586556760555&nextOffset=0&responseWithCatTree=true&depth=3 HTTP/2"
         yield scrapy.Request(
             url=url, callback=self.parse_products, headers=self.headers
         )
@@ -97,6 +107,15 @@ class BabyProducts(scrapy.Spider):
             )
             if item_url:
                 items["item_url"] = f"{self.base_url}{item_url}"
+            items["origin"] = item.get("productOrigin")
+            items["supplier"] = item.get("supplier")
+            items["type"] = item.get("type")
+            items["availability_status"] = items.get(
+                "availability", {"isAvailable": False, "max": 0}
+            ).get("isAvailable")
+            items["availability_max"] = items.get(
+                "availability", {"isAvailable": False, "max": 0}
+            ).get("max")
 
             yield items
 
@@ -104,8 +123,7 @@ class BabyProducts(scrapy.Spider):
         if pagination.get("totalPages") > pagination.get("currentPage"):
             next_page = pagination.get("currentPage") + 1
             print(f"\nMoving to next page {next_page} \n")
-            url = f"https://www.carrefour.ke/api/v7/categories/FKEN1000000?filter=&sortBy=relevance&currentPage={next_page}&pageSize=60&areaCode=Westlands%20-%20Nairobi&lang=en&displayCurr=KES&latitude=-1.2672236834605626&longitude=36.810586556760555"
-
+            url = f"https://www.carrefour.ke/api/v7/categories/FKEN1700000?filter=&sortBy=relevance&currentPage={next_page}&pageSize=60&maxPrice=&minPrice=&areaCode=Westlands%20-%20Nairobi&lang=en&displayCurr=KES&latitude=-1.2672236834605626&longitude=36.810586556760555&nextOffset=0&responseWithCatTree=true&depth=3 HTTP/2"
             yield scrapy.Request(
                 url=url, callback=self.parse_products, headers=self.headers
             )

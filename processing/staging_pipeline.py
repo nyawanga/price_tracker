@@ -61,7 +61,7 @@ def main() -> None:
     for source_website in sources:
         print(f"\nINFO: Processing data for source : {source_website}\n")
         df = spark.read.option("multiline", "true").json(
-            f"{ROOT_DIR}/{BASE_DIR}/{source_website}.json"
+            f"{ROOT_DIR}/{BASE_DIR}/{source_website}/*.json"
         )
         df = light_processing(df, source_website, staging_configs)
 

@@ -28,11 +28,16 @@ class BabyProducts(scrapy.Spider):
     start_page_no = 0
     brand_list = {}
     current_brand = None
+    scrapping_date = datetime.datetime.strftime(
+        datetime.datetime.now().date(), "%Y%m%d"
+    )
     custom_settings = {
         # "LOG_FILE": "logs/carrefour.log",
-        # "LOG_LEVEL": "DEBUG",
+        "LOG_LEVEL": "INFO",
         "FEED_FORMAT": "json",
-        "FEED_URI": "./dataset/mydawa.json",
+        "FEED_URI": f"./datasets/base/{name}/{scrapping_date}-%(batch_id)03d.json",
+        "FEED_EXPORT_BATCH_ITEM_COUNT": 100,
+        # "FEED_URI_PARAMS": "myproject.utils.uri_params",
     }
 
     # headers = {
@@ -203,7 +208,7 @@ class BabyProducts(scrapy.Spider):
             try:
                 replace_pattern = re.compile(r"[^\d|\.]+")
                 # digit_regex = re.compile(r".+?(?=\.)")
-                digit_regex = re.compile(fr"{int_regex}")
+                digit_regex = re.compile(rf"{int_regex}")
                 clean_price = replace_pattern.sub("", str(value))
                 clean_price = digit_regex.findall(str(clean_price))
                 if clean_price:
