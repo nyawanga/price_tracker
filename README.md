@@ -19,11 +19,22 @@ HOW TO:
 - To run the scrapper from docker run it with the commands:
   - `docker run --rm -v datasets:/datasets price_tracker /bin/bash -c "python run.py"`
 
+## Data Modelling
+
+- Added in a data modelling solution using dbt in the directory `dbt_price_tracker`.
+- This should be able to help use develop data marts in a more repeatable and version controlled way.
+- Currently we have managed to finish the initial prototype for jumia data mart based on the data we have.
+- Next steps would be to refine the logic and add carrefour as the next data source.
+- Also look in to a possibility of having both data in one favt table.  
+
+## ONGOING
+
+- Data Marting Solution using DBT dbt_price_tracker
+- Dockerization of batch processing and dbt data marting
+
 ## TO DO
 
-- Dockerize the app
 - Add cloud storage pipeline
 - Add database pipeline
 - Add reporting pipeline
-- Add data marting solution
 - Add analysis solution.
