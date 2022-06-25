@@ -150,3 +150,4 @@ tests.*
 **/*.ipynb
 processing/pyspark_helpers.py
 test.*
+processing/r.txt

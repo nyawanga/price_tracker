@@ -1,0 +1,28 @@
+
+FROM python:3.8.0-slim as base
+
+ARG APP_USER_HOME=/price_tracker
+ENV APP_HOME=/price_tracker
+# working directory in the container
+WORKDIR ${APP_HOME}
+
+# copy contents of the local src folder to the container working directory
+RUN apt-get update -qq && \
+    apt-get -y -qq install --no-install-recommends \
+    wget \
+    gnupg \
+    gcc \
+    postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY . ${APP_HOME}
+
+# copy requirements file to the container root folder
+COPY requirements.txt ${APP_HOME}/requirements.txt
+
+
+# install the python dependencies from the file copied
+RUN pip install --upgrade pip && \
+    pip install --user --no-cache -r requirements.txt
+
+

@@ -16,11 +16,16 @@ class MamaBabyShop(scrapy.Spider):
     download_delay = 2
     allowed_domains = ["motherbabyshop.co.ke"]
     count = 1
+    scrapping_date = datetime.datetime.strftime(
+        datetime.datetime.now().date(), "%Y%m%d"
+    )
     custom_settings = {
         # "LOG_FILE": "logs/carrefour.log",
-        # "LOG_LEVEL": "DEBUG",
+        "LOG_LEVEL": "INFO",
         "FEED_FORMAT": "json",
-        "FEED_URI": "./dataset/mamababyshop.json",
+        "FEED_URI": f"./datasets/base/{name}/{scrapping_date}-%(batch_id)03d.json",
+        "FEED_EXPORT_BATCH_ITEM_COUNT": 100,
+        # "FEED_URI_PARAMS": "myproject.utils.uri_params",
     }
 
     start_urls = [

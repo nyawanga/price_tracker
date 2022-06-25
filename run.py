@@ -16,6 +16,7 @@ PARSER.add_argument(
 
 ARGS, _ = PARSER.parse_known_args()
 crawlers = ARGS.crawlers
+# crawlers = ["carrefour"]
 
 
 def main():

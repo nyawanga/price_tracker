@@ -18,12 +18,18 @@ class JumiaGroceries(scrapy.Spider):
     start_urls = ["https://www.jumia.co.ke"]
     count = 1
     allowed_domains = ["jumia.co.ke"]
+    scrapping_date = datetime.datetime.strftime(
+        datetime.datetime.now().date(), "%Y%m%d"
+    )
     custom_settings = {
-        # "LOG_FILE": "logs/jumia.log",
-        # "LOG_LEVEL": "DEBUG",
+        # "LOG_FILE": "logs/carrefour.log",
+        "LOG_LEVEL": "INFO",
         "FEED_FORMAT": "json",
-        "FEED_URI": "./dataset/jumia.json",
+        "FEED_URI": f"./datasets/base/{name}/{scrapping_date}-%(batch_id)03d.json",
+        "FEED_EXPORT_BATCH_ITEM_COUNT": 100,
+        # "FEED_URI_PARAMS": "myproject.utils.uri_params",
     }
+
 
     def parse(self, response):
         url = f"{self.start_urls[0]}/groceries"
