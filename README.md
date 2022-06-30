@@ -36,6 +36,36 @@ HOW TO:
 - Added both Pandas and PySpark batch processing into the existing Postgres database
 - The scripts have prefix indicating tool used (`pandas_inges.py`, `pyspark_ingest.py`)
 
+## Database Postgrres Admin
+
+- Added the database and Postgres Admin to interact with the data ina database
+- To start the two services have an env file in my case `db.env`. Has the contents:
+    `POSTGRES_USER=''`
+    `POSTGRES_PASSWORD=''`
+    `POSTGRES_DB=''`
+
+    `PG_ADMIN_EMAIL=''`
+    `PG_ADMIN_PASSWORD=''`
+
+- Commands to start the service:
+      `dotenv -e db.env docker compose up -d`
+
+## Dashboards
+
+- Added Apache Superset for Business Intelligence Dashbaord in the directory (superset).
+- To run the container have :
+  - An env file in my case `superset.env'. The file looks like:
+
+     `USERNAME=''`
+     `FIRST_NAME=''`
+     `LAST_NAME=''`
+     `EMAIL=''`
+     `PASSWORD=''`
+  - A start-up.sh bash file containing commands to be run to start up the tool see
+
+- To start the container run:
+    `dotenv -e superset.env docker compose up -d`
+
 ## Ongoing
 
 - Data Marting Solution using DBT dbt_price_tracker
