@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  price_tracker:
+    container_name: "price_tracker_001"
+    image: "price_tracker_001"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_HOME: /price_tracker
+    volumes:
+      - .:/datasets
+
+    networks:
+      - price_tracker
+      # ports:
+      # - 4050:4050
+    expose:
+      - 4050
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  price_tracker:
+    external: true

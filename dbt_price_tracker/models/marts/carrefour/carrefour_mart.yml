@@ -1,0 +1,89 @@
+version: 2
+models:
+  - name: fact_carrefour_prices
+    description: A fact table that tracks prices of items
+    columns:
+      - name: date_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_id
+
+      - name: url_hash
+        tests:
+          - not_null
+
+      - name: dateid_url_hash
+        tests:
+          - not_null
+          - unique
+
+      - name: brand_hash
+        description: A hash value generated from the brand column. Foreign key to dim_brand (brand_hash)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_brands')
+              field: brand_hash
+
+      - name: category_hash
+        description: A hash value generated from the category column. Foreign key to dim_categories (category_hash)
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_categories')
+              field: category_hash
+
+  - name: dim_carrefour_brands
+    description: A dimension table that tracks brand dimension
+    columns:
+      - name: brand_hash
+        description: A hash value from the brand column used to join on fact_carrefour_prices on brand_hash column
+        tests:
+          - not_null
+          - unique
+
+      - name: brand
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_carrefour_categories
+    description: A dimension table that tracks category dimension
+    columns:
+      - name: category_hash
+        description: A hash value from the category column used to join on fact_carrefour_prices on category_hash column
+        tests:
+          - not_null
+          - unique
+
+      - name: category
+        tests:
+          - not_null
+          - unique
+
+      - name: category_1
+        description: First top level of the category hierarchy
+
+      - name: category_2
+        description: Second level of the category hierarchy
+
+      - name: category_3
+        description: Third level of the category hierarchy
+
+      - name: category_4
+        description: Fourth level of the category hierarchy
+
+      - name: category_5
+        description: Fifth level of the category hierarchy
+
+      # - name: signal_type_id
+      #   description: '{{ doc("signal_type_id_doc") }}'
+      #   tests:
+      #     - not_null
+      #     - accepted_values:
+      #         values:
+      #           - 0
+      #           - 1
+      #           - 2

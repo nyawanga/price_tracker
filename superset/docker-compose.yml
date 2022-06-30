@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  superset:
+    container_name: superset
+    image: superset
+    build:
+      context: .
+      dockerfile: Dockerfile.superset
+    env_file:
+      - superset.env
+    # environment:
+    #   USERNAME: "${USERNAME}"
+    #   FIRST_NAME: "${FIRST_NAME}"
+    #   LAST_NAME: "${LAST_NAME}"
+    #   EMAIL: "${EMAIL}"
+    #   PASSWORD: "${PASSWORD}"
+
+    networks:
+      - price_tracker
+
+    ports:
+      - 8087:8088
+    # expose:
+    #   - 4050
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  price_tracker:
+    external: true

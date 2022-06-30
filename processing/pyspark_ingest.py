@@ -42,12 +42,13 @@ def main() -> None:
     STAGING_DIR = staging_configs["STAGING_DIR"]
     SOURCES = staging_configs["sources"]
 
-    HOST = os.environ["HOST"]
+    HOST = os.environ["PG_HOST"]
     PG_PORT = int(os.environ["PG_PORT"])
-    DATABASE = os.environ["DATABASE"]
-    PASSWORD = os.environ["PASSWORD"]
-    USER = os.environ["USER"]
+    DATABASE = os.environ["PG_DB"]
+    PASSWORD = os.environ["PG_PASSWORD"]
+    USER = os.environ["PG_USER"]
 
+    sources = ["jumia"]
     for source_website in SOURCES:
         df = spark.read.parquet(f"{ROOT_DIR}/{STAGING_DIR}/{source_website}/*/*/*/**")
         df.printSchema()

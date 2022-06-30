@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  postdatabase:
+    container_name: postdatabase
+    image: postgres:12
+    # build:
+    # context: .
+    # dockerfile: Dockerfile.postgres
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    volumes:
+      - /home/cube/development/kube/postgres/pgdata12:/var/lib/postgresql/data
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    # healthcheck:
+    #   test: [ "CMD", "pg_isready", "-U", "airflow" ]
+    #   interval: 5s
+    #   retries: 5
+    # restart: never
+    networks:
+      - price_tracker
+    ports:
+      - 5436:5432
+
+  postadmin:
+    container_name: postadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${PG_ADMIN_EMAIL}"
+      PGADMIN_DEFAULT_PASSWORD: "${PG_ADMIN_PASSWORD}"
+    ports:
+      - 8086:80
+    networks:
+      - price_tracker
+
+networks:
+  price_tracker:
+    external: true
