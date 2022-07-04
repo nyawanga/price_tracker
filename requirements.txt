@@ -11,6 +11,8 @@ boto3
 black
 fuzzywuzzy
 pandas
+ruamel.yaml
 findspark
+pyarrow
 pyspark
 dbt-postgres

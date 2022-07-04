@@ -2,6 +2,7 @@ import findspark
 
 findspark.init()
 import datetime, re
+import argparse
 
 import pyspark
 from pyspark.sql import SparkSession, functions as f, types as t, SQLContext, DataFrame
@@ -17,8 +18,11 @@ from utils.pyspark_helpers import (
     convert_to_json,
     impute_timestamp,
     yaml_reader,
+    gather_paths,
+    date_file_splitter,
     ParquetWriter,
 )
+
 
 driver_path = "mysql-connector-java-8.0.23.jar"
 spark = (
@@ -26,6 +30,10 @@ spark = (
     .config("spark.driver.extraClassPath", f"{driver_path}")
     .getOrCreate()
 )
+NOW = datetime.datetime.now()
+PARSER = argparse.ArgumentParser()
+PARSER.add_argument("--date", default=datetime.datetime.strftime(NOW, "%Y%m%d"))
+ARGS, _ = PARSER.parse_known_args()
 
 
 def light_processing(df: DataFrame, source: str, configs: dict) -> DataFrame:
@@ -56,28 +64,35 @@ def main() -> None:
     )
     BASE_DIR = staging_configs["BASE_DIR"]
     STAGING_DIR = staging_configs["STAGING_DIR"]
-    sources = staging_configs["sources"]
+    SOURCES = staging_configs["sources"]
 
-    for source_website in sources:
+    for source_website in SOURCES:
         print(f"\nINFO: Processing data for source : {source_website}\n")
-        df = spark.read.option("multiline", "true").json(
-            f"{ROOT_DIR}/{BASE_DIR}/{source_website}/*.json"
+
+        json_paths = gather_paths(
+            f"{ROOT_DIR}/{BASE_DIR}/{source_website}/{ARGS.date}", "json"
         )
-        df = light_processing(df, source_website, staging_configs)
+        date_paths = date_file_splitter(json_paths)
 
-        df = df.withColumn("source_website", f.lit(source_website))
+        for date_value, paths in date_paths.items():
+            df = spark.read.option("multiline", "true").json(
+                [str(path) for path in paths]
+            )
+            df = light_processing(df, source_website, staging_configs)
 
-        # this is because you lose the column used when partitioning in parquet
-        df = df.withColumn("source", f.col("source_website"))
+            df = df.withColumn("source_website", f.lit(source_website))
 
-        ParquetWriter().writer(
-            df=df,
-            partitions=["source", "year", "month", "day"],
-            path=f"{ROOT_DIR}/{STAGING_DIR}/{source_website}",
-            mode="overwrite",
-            year_month_day_partitioning=True,
-            date_col="created_at",
-        )
+            # this is because you lose the column used when partitioning in parquet
+            df = df.withColumn("source", f.col("source_website"))
+
+            ParquetWriter().writer(
+                df=df,
+                partitions=[],
+                path=f"{ROOT_DIR}/{STAGING_DIR}/{source_website}/{date_value}/",
+                mode="overwrite",
+                year_month_day_partitioning=False,
+                date_col="created_at",
+            )
         print(f"\nINFO: Processing finished for source : {source_website}\n")
 
 

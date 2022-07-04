@@ -481,6 +481,60 @@ def yaml_reader(
         raise
 
 
+def gather_paths(dir: str, file_format: str) -> list:
+    if not dir.endswith("/"):
+        dir = f"{dir}/"
+    dir = Path(f"{dir}")
+    return dir.glob(f"*.{file_format}")
+
+
+def date_file_splitter(path_list: list) -> dict:
+    date_path_dict = {}
+    for path in path_list:
+        date_value = str(path).split("/")[-1].split("-")[0]
+        if date_path_dict.get(date_value):
+            date_path_dict[date_value].append(path)
+        else:
+            date_path_dict[date_value] = [path]
+
+    return date_path_dict
+
+
+def pandas_parquet_stream(paths: str) -> pd.DataFrame:
+    """A function used to read several parquet files from a glob object"""
+    for path in paths:
+        df = pd.read_parquet(path)
+        yield df
+
+
+def database_insert(
+    df_list: list, dest_table: str, conn: create_engine, mode: str = "append"
+) -> None:
+    try:
+        if mode == "truncate":
+            conn.execute(f"TRUNCATE TABLE {dest_table}")
+        else:
+            iterator_insert(df_list, dest_table, conn, mode)
+    except Exception as err:
+        print(err)
+
+
+def iterator_insert(
+    df_list: list, dest_table: str, conn, mode: str = "append", drop_index=True
+) -> None:
+    while True:
+        try:
+            df = next(df_list)
+            if drop_index:
+                df = df.set_index(df.columns[0])
+            if mode == "replace":
+                df.head(0).to_sql(name=dest_table, con=conn, if_exists=mode)
+            df.to_sql(name=dest_table, con=conn, if_exists=mode)
+        except StopIteration:
+            print("INFO: End of list all data streamed into database")
+            break
+
+
 class ParquetWriter:
     def __init__(self, max_records_per_file=200000):
         self.max_records_per_file = max_records_per_file

@@ -26,10 +26,9 @@ class JumiaGroceries(scrapy.Spider):
         "LOG_LEVEL": "INFO",
         "FEED_FORMAT": "json",
         "FEED_URI": f"./datasets/base/{name}/{scrapping_date}-%(batch_id)03d.json",
-        "FEED_EXPORT_BATCH_ITEM_COUNT": 100,
+        "FEED_EXPORT_BATCH_ITEM_COUNT": 1000,
         # "FEED_URI_PARAMS": "myproject.utils.uri_params",
     }
-
 
     def parse(self, response):
         url = f"{self.start_urls[0]}/groceries"

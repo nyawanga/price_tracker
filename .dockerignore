@@ -1,0 +1,10 @@
+**/*.pyc
+
+**/*.csv
+**/*_log.txt
+.gitignore/
+.git
+
+**/*.log
+**/*.json
+**/*.env
